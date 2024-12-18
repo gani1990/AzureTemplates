@@ -1,3 +1,0 @@
-grep -i "keyword" logfiel.log
-gunzip -dc "keyword" ligfile.tar.gz
-less logfile.log
