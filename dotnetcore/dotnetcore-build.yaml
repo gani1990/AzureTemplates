@@ -1,0 +1,30 @@
+parameters:
+ - name: mainproject
+   type: string
+   default: '**/*.csproj'
+ - name: testproject
+   type: string
+   default: '**/Nop.Tests/*Test.csproj'  
+ #- name: runtests
+  # type: boolean
+  # default: true
+
+steps:
+    - task: DotNetCoreCLI@2
+      displayName: build the code
+      inputs:
+       command: 'build'
+       projects: ${{ parameters.mainproject }}
+    - task: DotNetCoreCLI@2
+      displayName: "publish.$(Build.Repository.Name)"
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: ${{parameters.mainproject}}
+        arguments: '-o $(Build.ArtifactStagingDirectory)/output'
+        zipAfterPublish: true
+        modifyOutputPath: true
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)/output'
+        artifactName: $(Build.Repository.Name)
